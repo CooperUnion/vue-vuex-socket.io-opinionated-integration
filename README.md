@@ -55,12 +55,12 @@ In your socket server's `server.js`
 io.on('connection', function (socket) {
   
   socket.on('vue_sendMessage', (data)=>{
-    console.log('vue_sendMessage received', data)
+    // console.log('vue_sendMessage received', data)
     io.emit('user_message', data)
   })
   
   socket.on('client_userMessage', (data)=>{
-    console.log('client_userMessage received from vue app', data)
+    // console.log('client_userMessage received from vue app', data)
     socket.broadcast.emit('socket_userMessage', data)  //send to everyone except the sender --- via https://socket.io/docs/v3/emit-cheatsheet/index.html
   })
 });
