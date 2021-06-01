@@ -61,9 +61,7 @@ io.on('connection', function (socket) {
   
   socket.on('client_userMessage', (data)=>{
     console.log('client_userMessage received from vue app', data)
-    //send to everyone except the sender
-    //via https://socket.io/docs/v3/emit-cheatsheet/index.html
-    socket.broadcast.emit('socket_userMessage', data)
+    socket.broadcast.emit('socket_userMessage', data)  //send to everyone except the sender --- via https://socket.io/docs/v3/emit-cheatsheet/index.html
   })
 });
 
