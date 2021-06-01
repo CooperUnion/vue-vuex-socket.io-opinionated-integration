@@ -56,7 +56,7 @@ io.on('connection', function (socket) {
   
   socket.on('vue_sendMessage', (data)=>{
     // console.log('vue_sendMessage received', data)
-    io.emit('user_message', data)
+    io.emit('socket_systemMessage', data)
   })
   
   socket.on('client_userMessage', (data)=>{
