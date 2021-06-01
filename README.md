@@ -1,7 +1,7 @@
 # Vue-vuex-socket.io-opinionated-integration
 # A simple library with an incredibly long title
 
-By [Erin Sparling](https://erinsparling.glitch.me) and [Ricky Yurewitch](https://riccc.cc), for [Cooper Union](https://cooper.edu)'s End of the Year Show, 2021
+By [Erin Sparling](https://erinsparling.glitch.me) and [Ricky Yurewitch](https://ricc.glitch.me), for [Cooper Union](https://cooper.edu)'s End of the Year Show, 2021
 
 This plugin for Vue 3 projects is designed to glue together a socket.io-provided interface with a vuex store. It does so via an opinionated approach, in that it presurposes that Vuex Actions will be the only thing it interfaces with. 
 
