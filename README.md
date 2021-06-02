@@ -5,10 +5,45 @@ By [Erin Sparling](https://erinsparling.glitch.me) and [Ricky Yurewitch](https:/
 
 This plugin for Vue 3 projects is designed to glue together a socket.io-provided interface with a vuex store. It does so via an opinionated approach, in that it presurposes that Vuex Actions will be the only thing it interfaces with. 
 
+[[TOC]]
+
 # Installation
 `npm install vue-vuex-socket.io-opinionated-integration`
 
 # Usage
+To begin using this plugin, you need to use it in many places in multiple applications. 
+
+## In your Vue 3 application
+1. Install it, and include it in a `main.js` or equivalent file.
+2. Configure a template to use the data from (and potentially update the data in) a vuex store.
+3. Configure a vuex store to have actions that should be triggered in response to socket activity.
+
+## In your socket.io server application
+1. In `server.js` or the equivalent configured with socket.io, send and receive messages with the same name as the vuex store actions.
+
+
+# Examples
+
+## In your vue 3's main.js file
+```
+import { createApp } from 'vue'
+import App from './App.vue'
+import store from './store'
+import vuexSocketio from 'vue-vuex-socket.io-opinionated-integration'
+
+const app = createApp(App)
+  .use(store)
+  .use(router)
+  .use(vuexSocketio, {
+    connection: <url to your socket.io server>,
+    store,
+    socketOptions:{
+      path: '/socket.io/' //default for socket.io
+    }
+  })
+```
+
+
 In a single-file vue component:
 
 ```html
@@ -45,9 +80,6 @@ In a single-file vue component:
   }
 </script>
 ```
-
-
-# Example
 
 In your project's `src/store/index.js`:
 
