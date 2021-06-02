@@ -5,8 +5,6 @@ By [Erin Sparling](https://erinsparling.glitch.me) and [Ricky Yurewitch](https:/
 
 This plugin for Vue 3 projects is designed to glue together a socket.io-provided interface with a vuex store. It does so via an opinionated approach, in that it presurposes that Vuex Actions will be the only thing it interfaces with. 
 
-[[TOC]]
-
 # Installation
 `npm install vue-vuex-socket.io-opinionated-integration`
 
@@ -44,7 +42,7 @@ const app = createApp(App)
 ```
 
 
-In a single-file vue component:
+## In a single-file vue component:
 
 ```html
 <template>
@@ -81,7 +79,7 @@ In a single-file vue component:
 </script>
 ```
 
-In your project's `src/store/index.js`:
+## In your project's `src/store/index.js`:
 
 In this example, we have made three example types of messages:
 1. *System messages*, which are sent by the application itself. For example, a system status or notification.
@@ -133,7 +131,7 @@ This library sets up an Action Subscription to all actions triggered on the vuex
 
 In this example, while it receives the socket message for each of the above three types of messages, only `socket_systemMessage` and `client_userMessage` are handled. The reason for this is that we're assuming that only messages from the client should be handled and rebroadcast, and are turned into a `socket_userMessage` when sent. 
 
-In your socket server's `server.js`:
+## In your socket server's `server.js`:
 
 ```javascript
 io.on('connection', function (socket) {
