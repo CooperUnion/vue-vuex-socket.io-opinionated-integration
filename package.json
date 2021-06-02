@@ -1,6 +1,6 @@
 {
   "name": "vue-vuex-socket.io-opinionated-integration",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "An opinionated plugin that helps ferry events from a socket.io connection to vuex, and vice versa.",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,6 @@
   "homepage": "https://github.com/CooperUnion/vue-vuex-socket.io-opinionated-integration#readme",
   "dependencies": {
     "socket.io-client": "^4.1.2",
-    "vue": "^2.6.13"
+    "vue": "^3.0.11"
   }
 }

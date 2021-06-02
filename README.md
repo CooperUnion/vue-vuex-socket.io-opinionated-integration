@@ -1,12 +1,51 @@
 # Vue-vuex-socket.io-opinionated-integration
-# A simple library with an incredibly long title
+## A simple library with an incredibly long title
 
 By [Erin Sparling](https://erinsparling.glitch.me) and [Ricky Yurewitch](https://ricc.glitch.me), for [Cooper Union](https://cooper.edu)'s End of the Year Show, 2021
 
 This plugin for Vue 3 projects is designed to glue together a socket.io-provided interface with a vuex store. It does so via an opinionated approach, in that it presurposes that Vuex Actions will be the only thing it interfaces with. 
 
+## Justification
+This project was inspired by many resources, including the following links. These apaproaches generally talk about using socket.io first, and integration with vuex second, whereas our approach hides socket.io entirely from the components, and just uses it as a fast transport layer to propagate data changes to and from a server. 
+
+If you want something that comingles using sockets and vuex, in other ways, these may be a good resource for you, and were a great inspiration for us:
+- https://stackoverflow.com/questions/64782385/how-to-vue3-composition-api-plugin
+- https://github.com/kil0ba/Vue-3-Socket.io
+- https://github.com/probil/vue-socket.io-extended/tree/alpha
+
 # Installation
 `npm install vue-vuex-socket.io-opinionated-integration`
+
+## Configuration
+When using this plugin with a vue 3 app, the 2nd parameter abides by this schema:
+```javascript
+{
+  connection: 'url', //url to your socket.io server
+  store, //Instantiation passed in from vuex
+  pluginOptions: { //Object, optional
+    verbose: true //Boolean, which enables or disables noisy logs
+  },
+  socketOptions: { //Object, passed directly to socket.io
+    path: '/' //socket.io path
+  }
+}
+```
+
+In use, this configuration generally looks like this:
+```javascript
+const app = createApp(App)
+  .use(store)
+  .use(vuexSocketio, {
+    connection: <url to your socket.io server>,
+    store,
+    pluginOptions: {
+      verbose: true
+    },
+    socketOptions:{
+      path: '/socket.io/' //default for socket.io
+    }
+  })
+```
 
 # Usage
 To begin using this plugin, you need to use it in many places in multiple applications. 
@@ -31,7 +70,6 @@ import vuexSocketio from 'vue-vuex-socket.io-opinionated-integration'
 
 const app = createApp(App)
   .use(store)
-  .use(router)
   .use(vuexSocketio, {
     connection: <url to your socket.io server>,
     store,
@@ -127,7 +165,7 @@ export default createStore({
 })
 ```
 
-This library sets up an Action Subscription to all actions triggered on the vuex store. and each action is automatically sent to the socket server. On the socket server, only a subset of actions are handled.
+This library sets up an [Action Subscription](https://next.vuex.vuejs.org/api/#subscribe) to all actions triggered on the vuex store. and each action is automatically sent to the socket server. On the socket server, only a subset of actions are handled.
 
 In this example, while it receives the socket message for each of the above three types of messages, only `socket_systemMessage` and `client_userMessage` are handled. The reason for this is that we're assuming that only messages from the client should be handled and rebroadcast, and are turned into a `socket_userMessage` when sent. 
 

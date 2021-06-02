@@ -1,66 +1,64 @@
-//https://stackoverflow.com/questions/64782385/how-to-vue3-composition-api-plugin
 import { io } from 'socket.io-client'
 import { ref } from 'vue'
 
-//https://next.vuex.vuejs.org/api/#subscribe
 /* 
-Goals:
-- Listen to all socket messages
--- Pull out messages that match vuex actions or mutations
--- Fire actions or mutations with socket message payload
-- Listen for vuex action or mutation changes
--- Pull out updates that should propogate back to the socket
---- Possibly filter out updates that came from a socket in the first place?
+Current feature set:
+- Listen for vuex action executions
 -- Fire updates as appropriate back to the socket
+- Listen to all socket messages
+-- Pull out messages that match vuex actions
+-- Fire valid actions with socket message payload
 */
 
 export default {
   install: (app, { connection, store, pluginOptions, socketOptions }) => {
     const socket = io(connection, socketOptions)
     
+    let logger = ()=>{}
+
+    try {
+      if(pluginOptions.verbose === true) {
+        logger = console.log
+      }
+    } catch(e) {
+      //verbose not explicitly enabled
+    }
+
+    // Collect all valid actions from the store
     const validActions = Object.keys(store._actions)
-    const validMutations = Object.keys(store._mutations)
     
-    //these get triggered for all vuex actions
-    //here is where we'll send automatic messages
+    // The subscription function gets triggered for each action execution
     const actionsSubscription = store.subscribeAction((action, state) => {
-      console.log("subscribe action", {
+      logger("subscribe action", {
         type: action.type, 
         payload: action.payload
       })
 
-      console.log("sending back to the socket")
+      // All actions are sent back to the socket
+      logger("sending back to the socket")
       socket.emit(action.type, action.payload)
     })
-
-    // const mutationsSubscription = store.subscribe((mutation, state) => {
-    //   console.log("subscribe mutation", {
-    //     type: mutation.type, 
-    //     payload: mutation.payload
-    //   })
-    // })    
-
-    //this is an example of how we receive socket data
-    // socket.on('user_message', (message)=>{
-    //   console.log('plugin: a message was received:' + message)
-    //   store.dispatch('socket_userMessage', message)
-    // })
     
+    // Evaluate all incoming socket messages
     socket.onAny((event, data) => {
-      //is the incoming event a valid action?
+
+      // Check message against list of valid actions
       if(validActions.includes(event)) {
-        //trigger the action
-        console.log(`Event ${event} is valid, dispatching`)
+        
+        // Trigger the action, if valid
+        logger(`Event ${event} is valid, dispatching`)
         store.dispatch(event, data)
       } else {
-        //otherwise, log everything
-        console.log(`Event ${event} is invalid, ignoring`)
+        
+        // Log the message if it doesn't map to a valid action
+        logger(`Event ${event} is invalid, ignoring`)
       }
     });    
     
-    //provide as a global variable
-    app.config.globalProperties.$socket = socket
-    //provide as an injectable socket
+    // Purposefully not documented, because these are just for debugging
+    // The socket is provided as a global variable
+    app.config.globalProperties.socket = socket
+    // And as an injectable property
     app.provide('socket', socket)
   }
 }
