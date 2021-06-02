@@ -23,7 +23,7 @@ To begin using this plugin, you need to use it in many places in multiple applic
 # Examples
 
 ## In your vue 3's main.js file
-```
+```javascript
 import { createApp } from 'vue'
 import App from './App.vue'
 import store from './store'
